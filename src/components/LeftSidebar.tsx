@@ -37,9 +37,11 @@ export const LeftSidebar = () => {
         })}
 
         <div className="pt-4">
-          <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
-            Post
-          </Button>
+          <Link to="/post">
+            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+              Post
+            </Button>
+          </Link>
         </div>
 
         <div className="pt-8 space-y-2 text-sm text-muted-foreground">
