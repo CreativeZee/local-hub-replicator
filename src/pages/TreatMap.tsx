@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 
 import { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import "leaflet/dist/leaflet.css"; // IMPORTANT FOR VERCEL BUILD
 
 const TreatMap = () => {
@@ -86,28 +87,18 @@ const TreatMap = () => {
                       <p className="text-muted-foreground">Loading map...</p>
                     </div>
                   ) : (
-                    <MapContainer
-                      center={location}
-                      zoom={13}
-                      scrollWheelZoom={false}
-                      style={{ height: "100%", width: "100%" }}
-                    >
-                      <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      />
+                    
 
-                      {posts.map((post: any) => (
-                        <Marker
-                          key={post._id}
-                          position={[
-                            post.location.coordinates[1],
-                            post.location.coordinates[0],
-                          ]}
-                        >
-                          <Popup>{post.content}</Popup>
-                        </Marker>
-                      ))}
-                    </MapContainer>
+// use normally inside client-only component
+<MapContainer center={[51.505, -0.09]} zoom={13} style={{ height: '100%', width: '100%' }}>
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  />
+  <Marker position={[51.505, -0.09]}>
+    <Popup>A marker</Popup>
+  </Marker>
+</MapContainer>
+
                   )}
 
                 </div>

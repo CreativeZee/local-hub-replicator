@@ -1,10 +1,16 @@
-import L from "leaflet";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+interface IconDefaultWithPrivate extends L.Icon.Default {
+  _getIconUrl?: any;
+}
 
-L.Icon.Default.mergeOptions({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
+delete (L.Icon.Default.prototype as IconDefaultWithPrivate)._getIconUrl;
+
+(L.Icon.Default as any).mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
+
+export default L;
