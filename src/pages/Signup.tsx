@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -69,61 +69,72 @@ const Signup = () => {
   };
 
   return (
-    <div className="container mx-auto px-6 py-6">
-      <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
-      <form onSubmit={onSubmit} className="space-y-4 max-w-sm">
-        <div>
-          <Label htmlFor="name">Name</Label>
-          <Input
-            type="text"
-            name="name"
-            id="name"
-            value={name}
-            onChange={onChange}
-            required
-          />
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+  <div className="w-full max-w-sm p-8 bg-white rounded shadow-md">
+    <h1 className="text-2xl font-bold text-center mb-6">Sign Up</h1>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div>
+        <Label htmlFor="name">Name</Label>
+        <Input
+          type="text"
+          name="name"
+          id="name"
+          value={name}
+          onChange={onChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          type="email"
+          name="email"
+          id="email"
+          value={email}
+          onChange={onChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="password">Password</Label>
+        <Input
+          type="password"
+          name="password"
+          id="password"
+          value={password}
+          onChange={onChange}
+          required
+        />
+      </div>
+      <div>
+        <div className="flex justify-between items-center">
+          <Label htmlFor="address">Address</Label>
+          <Button type="button" variant="link" onClick={handleAutoLocation}>
+            Auto-detect
+          </Button>
         </div>
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input
-            type="email"
-            name="email"
-            id="email"
-            value={email}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <div>
-          <Label htmlFor="password">Password</Label>
-          <Input
-            type="password"
-            name="password"
-            id="password"
-            value={password}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <div>
-          <div className="flex justify-between items-center">
-            <Label htmlFor="address">Address</Label>
-            <Button type="button" variant="link" onClick={handleAutoLocation}>
-              Auto-detect
-            </Button>
-          </div>
-          <Input
-            type="text"
-            name="address"
-            id="address"
-            value={address}
-            onChange={onChange}
-            required
-          />
-        </div>
-        <Button type="submit">Sign Up</Button>
-      </form>
-    </div>
+        <Input
+          type="text"
+          name="address"
+          id="address"
+          value={address}
+          onChange={onChange}
+          required
+        />
+      </div>
+      <Button type="submit" className="w-full">Sign Up</Button>
+    </form>
+
+    {/* Already have an account link */}
+    <p className="mt-4 text-sm text-center text-gray-600">
+      Already have an account?{" "}
+      <Link to="/login" className="text-blue-600 hover:underline">
+        Login
+      </Link>
+    </p>
+  </div>
+</div>
+
   );
 };
 
