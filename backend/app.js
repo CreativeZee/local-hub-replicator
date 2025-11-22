@@ -14,15 +14,20 @@ const PORT = process.env.PORT || 5000;
 //   .catch(err => console.log(err));
 async function connectDB() {
   if (isConnected) return;
-
-  await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  isConnected = true;
-  console.log("MongoDB connected");
+  console.log("Connecting to MongoDB at:", process.env.MONGO_URI);
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    isConnected = true;
+    console.log("MongoDB connected successfully!");
+  } catch (err) {
+    console.error("MongoDB connection failed:", err.message);
+    throw err;
+  }
 }
+
 app.get("/test", async (req, res) => {
   await connectDB();
   res.json({ message: "Backend connected to MongoDB!" });
