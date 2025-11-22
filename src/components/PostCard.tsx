@@ -1,22 +1,68 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal, Bookmark } from "lucide-react";
 
 interface PostCardProps {
-  author: {
+  _id: string;
+  title: string;
+  user: {
+    _id: string;
     name: string;
-    initials: string;
-    location: string;
-    time: string;
+    avatar?: string;
   };
   content: string;
   image?: string;
-  likes: number;
-  comments: number;
+  likes: any[];
+  comments: any[];
+  date: string;
 }
 
-export const PostCard = ({ author, content, image, likes, comments }: PostCardProps) => {
+export const PostCard = ({ _id, user, title, content, image, likes, comments, date }: PostCardProps) => {
+  const formatTimeAgo = (dateString: string) => {
+    const now = new Date();
+    const postDate = new Date(dateString);
+    const seconds = Math.floor((now.getTime() - postDate.getTime()) / 1000);
+
+    let interval = seconds / 31536000;
+    if (interval > 1) return Math.floor(interval) + " years ago";
+    interval = seconds / 2592000;
+    if (interval > 1) return Math.floor(interval) + " months ago";
+    interval = seconds / 86400;
+    if (interval > 1) return Math.floor(interval) + " days ago";
+    interval = seconds / 3600;
+    if (interval > 1) return Math.floor(interval) + " hours ago";
+    interval = seconds / 60;
+    if (interval > 1) return Math.floor(interval) + " minutes ago";
+    return Math.floor(seconds) + " seconds ago";
+  };
+
+  const handleLike = async () => {
+    try {
+      await fetch(`http://localhost:5000/api/posts/like/${_id}`, {
+        method: "PUT",
+        headers: {
+          "x-auth-token": localStorage.getItem("token") || "",
+        },
+      });
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleBookmark = async () => {
+    try {
+      await fetch(`http://localhost:5000/api/profile/bookmark/${_id}`, {
+        method: "PUT",
+        headers: {
+          "x-auth-token": localStorage.getItem("token") || "",
+        },
+      });
+    } catch (error) {
+      console.error("Error bookmarking post:", error);
+    }
+  };
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -24,20 +70,27 @@ export const PostCard = ({ author, content, image, likes, comments }: PostCardPr
           <div className="flex gap-3">
             <Avatar>
               <AvatarFallback className="bg-muted text-foreground">
-                {author.initials}
+                {user.name.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="font-semibold">{author.name}</h3>
+              <h3 className="font-semibold">{user.name}</h3>
               <p className="text-sm text-muted-foreground">
-                {author.location} · {author.time}
+                London, England · {formatTimeAgo(date)}
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
-            <MoreHorizontal className="h-5 w-5" />
-          </Button>
+          <div className="flex items-center">
+            <Button variant="ghost" size="icon" onClick={handleBookmark}>
+              <Bookmark className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon">
+              <MoreHorizontal className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
+
+        <h4 className="font-bold text-lg mb-2">{title}</h4>
 
         <p className="mb-4 text-foreground">
           {content}
@@ -53,13 +106,13 @@ export const PostCard = ({ author, content, image, likes, comments }: PostCardPr
         )}
 
         <div className="flex items-center gap-6 text-muted-foreground">
-          <Button variant="ghost" size="sm" className="gap-2 px-2">
+          <Button variant="ghost" size="sm" className="gap-2 px-2" onClick={handleLike}>
             <Heart className="h-5 w-5" />
-            <span>{likes}</span>
+            <span>{likes.length}</span>
           </Button>
           <Button variant="ghost" size="sm" className="gap-2 px-2">
             <MessageCircle className="h-5 w-5" />
-            <span>{comments}</span>
+            <span>{comments.length}</span>
           </Button>
           <Button variant="ghost" size="icon" className="ml-auto">
             <Share2 className="h-5 w-5" />

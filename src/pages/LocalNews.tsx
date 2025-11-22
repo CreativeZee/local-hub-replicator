@@ -3,35 +3,44 @@ import { LeftSidebar } from "@/components/LeftSidebar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Newspaper } from "lucide-react";
-
-const newsArticles = [
-  {
-    id: 1,
-    title: "Community Garden Project Launches This Spring",
-    category: "Community",
-    image: "https://images.unsplash.com/photo-1464226184884-fa280b87c399",
-    excerpt: "Local residents are coming together to create a shared garden space in the neighbourhood...",
-    time: "2 hours ago",
-  },
-  {
-    id: 2,
-    title: "New Traffic Calming Measures Announced",
-    category: "Safety",
-    image: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000",
-    excerpt: "The council has approved new speed bumps and pedestrian crossings for our area...",
-    time: "5 hours ago",
-  },
-  {
-    id: 3,
-    title: "Local Business Wins National Award",
-    category: "Business",
-    image: "https://images.unsplash.com/photo-1556742400-b5a1f8e06751",
-    excerpt: "Congratulations to the Corner Café for their outstanding achievement...",
-    time: "1 day ago",
-  },
-];
+import { useState, useEffect } from "react";
 
 const LocalNews = () => {
+  const [newsArticles, setNewsArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchNews = async (latitude: number, longitude: number) => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/news?lat=${latitude}&lon=${longitude}`);
+        const data = await response.json();
+        setNewsArticles(data);
+      } catch (error) {
+        console.error("Error fetching news:", error);
+      }
+    };
+
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            fetchNews(position.coords.latitude, position.coords.longitude);
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+            // Fetch all news if location is not available
+            fetchNews(0, 0);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+        // Fetch all news if location is not available
+        fetchNews(0, 0);
+      }
+    };
+
+    getLocation();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -45,19 +54,19 @@ const LocalNews = () => {
             </div>
             
             <div className="space-y-4">
-              {newsArticles.map((article) => (
-                <Card key={article.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+              {newsArticles.map((article: any, index: number) => (
+                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
                   <div className="flex gap-4">
                     <img 
-                      src={article.image} 
+                      src={article.urlToImage}
                       alt={article.title}
                       className="w-48 h-32 object-cover"
                     />
                     <CardContent className="p-4 flex-1">
-                      <Badge variant="secondary" className="mb-2">{article.category}</Badge>
+                      <Badge variant="secondary" className="mb-2">{article.source.name}</Badge>
                       <h3 className="font-semibold text-lg mb-2">{article.title}</h3>
-                      <p className="text-sm text-muted-foreground mb-2">{article.excerpt}</p>
-                      <p className="text-xs text-muted-foreground">{article.time}</p>
+                      <p className="text-sm text-muted-foreground mb-2">{article.description}</p>
+                      <p className="text-xs text-muted-foreground">{new Date(article.publishedAt).toLocaleDateString()}</p>
                     </CardContent>
                   </div>
                 </Card>

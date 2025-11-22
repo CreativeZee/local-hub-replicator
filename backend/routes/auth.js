@@ -1,0 +1,119 @@
+
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const NodeGeocoder = require('node-geocoder');
+
+const options = {
+  provider: 'openstreetmap',
+};
+
+const geocoder = NodeGeocoder(options);
+
+// @route   POST api/auth/register
+// @desc    Register user
+// @access  Public
+router.post('/register', async (req, res) => {
+  const { name, email, password, address } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+
+    if (user) {
+      return res.status(400).json({ msg: 'User already exists' });
+    }
+
+    const geocodedData = await geocoder.geocode(address);
+    if (!geocodedData || geocodedData.length === 0) {
+      return res.status(400).json({ msg: 'Invalid address' });
+    }
+
+    const location = {
+      type: 'Point',
+      coordinates: [geocodedData[0].longitude, geocodedData[0].latitude],
+      address: geocodedData[0].formattedAddress,
+    };
+
+    user = new User({
+      name,
+      email,
+      password,
+      location,
+    });
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      'secret',
+      { expiresIn: 360000 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   POST api/auth/login
+// @desc    Authenticate user & get token
+// @access  Public
+router.post('/login', async (req, res) => {
+  console.log("Login request received:", req.body);
+  const { email, password } = req.body;
+
+  try {
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+console.log("User found:", user);
+console.log("Comparing password with bcrypt hash...");
+console.log("Login request received:", req.body);
+console.log("User found:", user.email);
+console.log("DB password hash:", user.password);
+console.log("Entered password:", password);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      'secret',
+      { expiresIn: 360000 },
+      (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+      }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+module.exports = router;

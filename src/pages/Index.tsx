@@ -5,45 +5,43 @@ import { FeedTabs } from "@/components/FeedTabs";
 import { PostCard } from "@/components/PostCard";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
-  const posts = [
-    {
-      author: {
-        name: "M. N.",
-        initials: "M",
-        location: "London, England",
-        time: "12 hrs ago",
-      },
-      content: "R.I.P\nJackie Naidoo (age 14) ...",
-      image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800",
-      likes: 174,
-      comments: 70,
-    },
-    {
-      author: {
-        name: "Sarah K.",
-        initials: "SK",
-        location: "London, England",
-        time: "5 hrs ago",
-      },
-      content: "Does anyone know a good plumber in the area? Need someone reliable for a small job. Thanks in advance!",
-      likes: 23,
-      comments: 15,
-    },
-    {
-      author: {
-        name: "James P.",
-        initials: "JP",
-        location: "London, England",
-        time: "1 day ago",
-      },
-      content: "Community clean-up this Saturday at 10am! Let's make our neighbourhood shine. All welcome, bring gloves if you have them.",
-      image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800",
-      likes: 89,
-      comments: 34,
-    },
-  ];
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async (latitude: number, longitude: number) => {
+      try {
+        const response = await fetch(`http://localhost:5000/api/posts?lat=${latitude}&lon=${longitude}`);
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            fetchPosts(position.coords.latitude, position.coords.longitude);
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+            // Fetch all posts if location is not available
+            fetchPosts(0, 0);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+        // Fetch all posts if location is not available
+        fetchPosts(0, 0);
+      }
+    };
+
+    getLocation();
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -53,7 +51,7 @@ const Index = () => {
         <div className="flex gap-6">
           <LeftSidebar />
           
-          <main className="flex-1 max-w-2xl">
+          <main className="flex-1 max-w-5xl">
             <div className="mb-6 flex items-center justify-between">
               <FeedTabs />
               <Button className="bg-primary hover:bg-primary/90 gap-2">
@@ -63,8 +61,8 @@ const Index = () => {
             </div>
 
             <div className="space-y-4">
-              {posts.map((post, index) => (
-                <PostCard key={index} {...post} />
+              {posts.map((post: any) => (
+                <PostCard key={post._id} {...post} />
               ))}
             </div>
           </main>
