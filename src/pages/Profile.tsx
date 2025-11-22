@@ -40,7 +40,7 @@ export const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/profile/me", {
+        const response = await fetch("/api/profile/me", {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
           },
@@ -59,7 +59,7 @@ export const Profile = () => {
 
     const fetchPosts = async (userId: string) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/posts/user/${userId}`);
+        const response = await fetch(`/api/posts/user/${userId}`);
         const data = await response.json();
         setPosts(data);
       } catch (error) {
@@ -69,7 +69,7 @@ export const Profile = () => {
 
     const fetchGroups = async (userId: string) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/groups/user/${userId}`);
+        const response = await fetch(`/api/groups/user/${userId}`);
         const data = await response.json();
         debugger;
         setGroups(data);
@@ -80,7 +80,7 @@ export const Profile = () => {
 
     const fetchBookmarks = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/profile/bookmarks", {
+        const response = await fetch("/api/profile/bookmarks", {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
           },
@@ -94,7 +94,7 @@ export const Profile = () => {
 
     const fetchInterestedEvents = async (userId: string) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/events/attending/${userId}`);
+        const response = await fetch(`/api/events/attending/${userId}`);
         const data = await response.json();
         setInterestedEvents(data);
       } catch (error) {
@@ -128,7 +128,7 @@ export const Profile = () => {
 
   const handleAddInterest = async (interest: string) => {
     try {
-      await fetch("http://localhost:5000/api/profile/interests", {
+      await fetch("/api/profile/interests", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +137,7 @@ export const Profile = () => {
         body: JSON.stringify({ interest }),
       });
       // Refresh user data to show updated interests
-      const response = await fetch("http://localhost:5000/api/profile/me", {
+      const response = await fetch("/api/profile/me", {
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",
         },
@@ -165,7 +165,7 @@ export const Profile = () => {
       formData.append("address", profileFormData.address);
       formData.append("bio", profileFormData.bio);
 
-      const response = await fetch("http://localhost:5000/api/profile", {
+      const response = await fetch("/api/profile", {
         method: "PUT",
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",
@@ -176,7 +176,7 @@ export const Profile = () => {
       if (response.ok) {
         setEditProfileOpen(false);
         // Refresh profile data
-        const updatedUserResponse = await fetch("http://localhost:5000/api/profile/me", {
+        const updatedUserResponse = await fetch("/api/profile/me", {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
           },
@@ -195,7 +195,7 @@ export const Profile = () => {
   const handlePostIntroduction = async () => {
     console.log("Posting introduction:", introduction);
     try {
-      await fetch("http://localhost:5000/api/posts", {
+      await fetch("/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -206,7 +206,7 @@ export const Profile = () => {
       setIntroductionOpen(false);
       setIntroduction("");
       // Refresh posts
-      const response = await fetch(`http://localhost:5000/api/posts/user/${user._id}`);
+      const response = await fetch(`/api/posts/user/${user._id}`);
       const data = await response.json();
       setPosts(data);
     } catch (error) {
@@ -266,7 +266,7 @@ export const Profile = () => {
                           <Label htmlFor="avatar">Avatar</Label>
                           <div className="flex items-center gap-4">
                             <Avatar className="h-12 w-12">
-                              <AvatarImage src={`http://localhost:5000/${user?.avatar}`} />
+                              <AvatarImage src={`/api/${user?.avatar}`} />
                               <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <Input
@@ -297,7 +297,7 @@ export const Profile = () => {
               <CardContent className="pt-0 pb-6">
                 <div className="flex items-start gap-4 -mt-10">
                   <Avatar className="h-20 w-20 border-4 border-background bg-muted">
-                    <AvatarImage src={`http://localhost:5000/${user?.avatar}`} />
+                    <AvatarImage src={`/api/${user?.avatar}`} />
                     <AvatarFallback className="text-2xl font-semibold">
                       {user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>

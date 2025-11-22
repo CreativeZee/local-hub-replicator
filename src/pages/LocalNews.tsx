@@ -11,7 +11,7 @@ const LocalNews = () => {
   useEffect(() => {
     const fetchNews = async (latitude: number, longitude: number) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/news?lat=${latitude}&lon=${longitude}`);
+        const response = await fetch(`/api/news?lat=${latitude}&lon=${longitude}`);
         const data = await response.json();
         setNewsArticles(data);
       } catch (error) {

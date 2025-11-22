@@ -13,7 +13,7 @@ const Index = () => {
   useEffect(() => {
     const fetchPosts = async (latitude: number, longitude: number) => {
       try {
-        const response = await fetch(`http://localhost:5000/api/posts?lat=${latitude}&lon=${longitude}`);
+        const response = await fetch(`/api/posts?lat=${latitude}&lon=${longitude}`);
         const data = await response.json();
         setPosts(data);
       } catch (error) {

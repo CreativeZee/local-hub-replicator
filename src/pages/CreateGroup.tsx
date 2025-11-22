@@ -23,7 +23,7 @@ const CreateGroup = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/api/groups", {
+      const response = await fetch("/api/groups", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -39,7 +39,7 @@ export const PostCard = ({ _id, user, title, content, image, likes, comments, da
 
   const handleLike = async () => {
     try {
-      await fetch(`http://localhost:5000/api/posts/like/${_id}`, {
+      await fetch(`/api/posts/like/${_id}`, {
         method: "PUT",
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",
@@ -52,7 +52,7 @@ export const PostCard = ({ _id, user, title, content, image, likes, comments, da
 
   const handleBookmark = async () => {
     try {
-      await fetch(`http://localhost:5000/api/profile/bookmark/${_id}`, {
+      await fetch(`/api/profile/bookmark/${_id}`, {
         method: "PUT",
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",

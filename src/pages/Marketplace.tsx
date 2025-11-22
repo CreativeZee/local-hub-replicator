@@ -24,7 +24,7 @@ const Marketplace = () => {
 
   useEffect(() => {
   const fetchListings = async (lat?: number, lon?: number) => {
-    let url = "http://localhost:5000/api/marketplace";
+    let url = "/api/marketplace";
     if (lat && lon) url += `?lat=${lat}&lon=${lon}`;
 
     const res = await fetch(url);
@@ -50,7 +50,7 @@ const Marketplace = () => {
     const userId = getUserId();
     if (userId) {
       try {
-        const response = await fetch(`http://localhost:5000/api/marketplace/user/${userId}`);
+        const response = await fetch(`/api/marketplace/user/${userId}`);
         const data = await response.json();
         setYourListings(data);
       } catch (error) {
