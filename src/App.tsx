@@ -18,6 +18,8 @@ import NotFound from "./pages/NotFound";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
+import 'leaflet/dist/leaflet.css';
+
 
 const queryClient = new QueryClient();
 
