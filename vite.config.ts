@@ -13,4 +13,7 @@ export default defineConfig({
   ssr: {
     noExternal: ['leaflet', 'react-leaflet'],
   },
+  build: {
+    outDir: 'dist', // default, fine for Vercel
+  },
 });
