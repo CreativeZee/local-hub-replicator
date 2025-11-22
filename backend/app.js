@@ -32,6 +32,18 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
+// MongoDB connection middleware for serverless
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("MongoDB connection error:", err.message);
+    res.status(500).json({ msg: "MongoDB connection error", error: err.message });
+  }
+});
+
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/marketplace', require('./routes/marketplace'));
