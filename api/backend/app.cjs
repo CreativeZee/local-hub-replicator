@@ -57,6 +57,7 @@ app.use('/local-news', require('./routes/localNews.cjs'));
 app.use('/groups', require('./routes/groups.cjs'));
 app.use('/profile', require('./routes/profile.cjs'));
 app.use('/news', require('./routes/news.cjs'));
+app.get('/test', (req, res) => res.json({ message: 'Server is alive' }));
 
 
 // app.listen(PORT, () => {
