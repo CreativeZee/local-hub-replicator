@@ -1,7 +1,7 @@
 
 const express = require('express');
 const router = express.Router();
-const LocalNews = require('../models/LocalNews');
+const LocalNews = require('../models/LocalNews.cjs');
 
 // @route   GET api/local-news
 // @desc    Get all local news

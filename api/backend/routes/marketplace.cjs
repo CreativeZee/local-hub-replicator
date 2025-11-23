@@ -3,11 +3,11 @@ const express = require('express');
 
 const router = express.Router();
 
-const auth = require('../middleware/auth');
+const auth = require('../middleware/auth.cjs');
 
-const MarketplaceItem = require('../models/MarketplaceItem');
+const MarketplaceItem = require('../models/MarketplaceItem.cjs');
 
-const User = require('../models/User');
+const User = require('../models/User.cjs');
 
 
 

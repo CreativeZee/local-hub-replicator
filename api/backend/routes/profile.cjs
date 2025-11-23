@@ -1,8 +1,8 @@
 
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
-const User = require('../models/User');
+const auth = require('../middleware/auth.cjs');
+const User = require('../models/User.cjs');
 
 // @route   GET api/profile/me
 // @desc    Get current user's profile
@@ -85,7 +85,7 @@ router.put('/interests', auth, async (req, res) => {
   }
 });
 
- const upload = require('../middleware/upload');
+ const upload = require('../middleware/upload.cjs');
 
 // @route   PUT api/profile
 // @desc    Update user profile

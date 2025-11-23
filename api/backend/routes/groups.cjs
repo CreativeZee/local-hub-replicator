@@ -1,9 +1,9 @@
 
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
-const Group = require('../models/Group');
-const User = require('../models/User');
+const auth = require('../middleware/auth.cjs');
+const Group = require('../models/Group.cjs');
+const User = require('../models/User.cjs');
 
 // @route   POST api/groups
 // @desc    Create a group

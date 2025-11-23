@@ -1,9 +1,9 @@
 
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth');
-const Event = require('../models/Event');
-const User = require('../models/User');
+const auth = require('../middleware/auth.cjs');
+const Event = require('../models/Event.cjs');
+const User = require('../models/User.cjs');
 
 // @route   POST api/events
 // @desc    Create an event

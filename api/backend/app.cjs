@@ -49,14 +49,14 @@ app.use(async (req, res, next) => {
 });
 
 
-app.use('/auth', require('./routes/auth'));
-app.use('/posts', require('./routes/posts'));
-app.use('/marketplace', require('./routes/marketplace'));
-app.use('/events', require('./routes/events'));
-app.use('/local-news', require('./routes/localNews'));
-app.use('/groups', require('./routes/groups'));
-app.use('/profile', require('./routes/profile'));
-app.use('/news', require('./routes/news'));
+app.use('/auth', require('./routes/auth.cjs'));
+app.use('/posts', require('./routes/posts.cjs'));
+app.use('/marketplace', require('./routes/marketplace.cjs'));
+app.use('/events', require('./routes/events.cjs'));
+app.use('/local-news', require('./routes/localNews.cjs'));
+app.use('/groups', require('./routes/groups.cjs'));
+app.use('/profile', require('./routes/profile.cjs'));
+app.use('/news', require('./routes/news.cjs'));
 
 
 // app.listen(PORT, () => {
