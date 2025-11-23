@@ -49,14 +49,15 @@ app.use(async (req, res, next) => {
 });
 
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/posts', require('./routes/posts'));
-app.use('/api/marketplace', require('./routes/marketplace'));
-app.use('/api/events', require('./routes/events'));
-app.use('/api/local-news', require('./routes/localNews'));
-app.use('/api/groups', require('./routes/groups'));
-app.use('/api/profile', require('./routes/profile'));
-app.use('/api/news', require('./routes/news'));
+app.use('/auth', require('./routes/auth'));
+app.use('/posts', require('./routes/posts'));
+app.use('/marketplace', require('./routes/marketplace'));
+app.use('/events', require('./routes/events'));
+app.use('/local-news', require('./routes/localNews'));
+app.use('/groups', require('./routes/groups'));
+app.use('/profile', require('./routes/profile'));
+app.use('/news', require('./routes/news'));
+
 
 // app.listen(PORT, () => {
 //   console.log(`Server is running on port ${PORT}`);
