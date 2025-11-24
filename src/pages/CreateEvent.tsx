@@ -24,7 +24,8 @@ const CreateEvent = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/events", {
+      // const response = await fetch("/api/events", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/events`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -23,7 +23,8 @@ const CreateGroup = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/groups", {
+      // const response = await fetch("/api/groups", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

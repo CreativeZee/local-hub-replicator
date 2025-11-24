@@ -11,7 +11,8 @@ const LocalNews = () => {
   useEffect(() => {
     const fetchNews = async (latitude: number, longitude: number) => {
       try {
-        const response = await fetch(`/api/news?lat=${latitude}&lon=${longitude}`);
+        // const response = await fetch(`/api/news?lat=${latitude}&lon=${longitude}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/news?lat=${latitude}&lon=${longitude}`);
         const data = await response.json();
         setNewsArticles(data);
       } catch (error) {

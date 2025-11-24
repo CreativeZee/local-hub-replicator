@@ -26,7 +26,8 @@ const Groups = () => {
   useEffect(() => {
     const fetchGroups = async (latitude: number, longitude: number) => {
       try {
-        const response = await fetch(`/api/groups?lat=${latitude}&lon=${longitude}`);
+        // const response = await fetch(`/api/groups?lat=${latitude}&lon=${longitude}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups?lat=${latitude}&lon=${longitude}`);
         const data = await response.json();
         setGroups(data);
       } catch (error) {
@@ -61,7 +62,8 @@ const Groups = () => {
     const userId = getUserId();
     if (userId) {
       try {
-        const response = await fetch(`/api/groups/user/${userId}`);
+        // const response = await fetch(`/api/groups/user/${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups/user/${userId}`);
         const data = await response.json();
         setYourGroups(data);
       } catch (error) {
@@ -78,7 +80,8 @@ const Groups = () => {
     }
 
     try {
-      const response = await fetch(`/api/groups/${groupId}/join`, {
+      // const response = await fetch(`/api/groups/${groupId}/join`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -25,7 +25,9 @@ const Events = () => {
   useEffect(() => {
     const fetchEvents = async (latitude: number, longitude: number) => {
       try {
-        const response = await fetch(`/api/events?lat=${latitude}&lon=${longitude}`);
+        // const response = await fetch(`/api/events?lat=${latitude}&lon=${longitude}`);
+        
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/events?lat=${latitude}&lon=${longitude}`);
         const data = await response.json();
         setEvents(data);
       } catch (error) {
@@ -59,7 +61,8 @@ const Events = () => {
     const userId = getUserId();
     if (userId) {
       try {
-        const response = await fetch(`/api/events/user/${userId}`);
+        // const response = await fetch(`/api/events/user/${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/events/user/${userId}`);
         const data = await response.json();
         setYourEvents(data);
       } catch (error) {
@@ -70,7 +73,8 @@ const Events = () => {
 
   const handleInterested = async (eventId: string) => {
     try {
-      await fetch(`/api/events/interested/${eventId}`, {
+      // await fetch(`/api/events/interested/${eventId}`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/events/interested/${eventId}`, {
         method: "PUT",
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",

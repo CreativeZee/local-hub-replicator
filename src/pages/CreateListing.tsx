@@ -39,7 +39,8 @@ useEffect(() => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   try {
-    const response = await fetch("/api/marketplace", {
+    // const response = await fetch("/api/marketplace", {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/marketplace`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
