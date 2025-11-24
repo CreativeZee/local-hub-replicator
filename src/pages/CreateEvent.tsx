@@ -25,7 +25,7 @@ const CreateEvent = () => {
     e.preventDefault();
     try {
       // const response = await fetch("/api/events", {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/events`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/events`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
