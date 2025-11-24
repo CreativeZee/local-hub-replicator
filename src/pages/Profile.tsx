@@ -40,8 +40,10 @@ export const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch("/api/profile/me", {
-          headers: {
+        // const response = await fetch("/api/profile/me", {
+        
+const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/register`,{       
+  headers: {
             "x-auth-token": localStorage.getItem("token") || "",
           },
         });
@@ -59,7 +61,8 @@ export const Profile = () => {
 
     const fetchPosts = async (userId: string) => {
       try {
-        const response = await fetch(`/api/posts/user/${userId}`);
+        // const response = await fetch(`/api/posts/user/${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/user/${userId}`);
         const data = await response.json();
         setPosts(data);
       } catch (error) {
@@ -69,7 +72,8 @@ export const Profile = () => {
 
     const fetchGroups = async (userId: string) => {
       try {
-        const response = await fetch(`/api/groups/user/${userId}`);
+        // const response = await fetch(`/api/groups/user/${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups/user/${userId}`);
         const data = await response.json();
         debugger;
         setGroups(data);
@@ -80,8 +84,9 @@ export const Profile = () => {
 
     const fetchBookmarks = async () => {
       try {
-        const response = await fetch("/api/profile/bookmarks", {
-          headers: {
+        // const response = await fetch("/api/profile/bookmarks", {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/bookmarks`, {
+        headers: {
             "x-auth-token": localStorage.getItem("token") || "",
           },
         });
@@ -94,7 +99,8 @@ export const Profile = () => {
 
     const fetchInterestedEvents = async (userId: string) => {
       try {
-        const response = await fetch(`/api/events/attending/${userId}`);
+        // const response = await fetch(`/api/events/attending/${userId}`);
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/events/attending/${userId}`);
         const data = await response.json();
         setInterestedEvents(data);
       } catch (error) {
