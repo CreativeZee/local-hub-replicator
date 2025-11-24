@@ -23,7 +23,7 @@ const Signup = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   try {
-    const response = await fetch("/api/auth/register", {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
