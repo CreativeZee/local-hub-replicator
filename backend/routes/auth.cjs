@@ -8,6 +8,11 @@ const NodeGeocoder = require('node-geocoder');
 
 const options = {
   provider: 'openstreetmap',
+  httpAdapter: 'https',
+  formatter: null,
+  headers: {
+    'User-Agent': 'local-hub-replicator/1.0 (iamzee4@gmail.com)', // Replace with your real email
+  },
 };
 
 const geocoder = NodeGeocoder(options);
@@ -25,16 +30,23 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ msg: 'User already exists' });
     }
 
-    const geocodedData = await geocoder.geocode(address);
-    if (!geocodedData || geocodedData.length === 0) {
-      return res.status(400).json({ msg: 'Invalid address' });
-    }
+    let location = null;
 
-    const location = {
-      type: 'Point',
-      coordinates: [geocodedData[0].longitude, geocodedData[0].latitude],
-      address: geocodedData[0].formattedAddress,
-    };
+    if (address && address.trim() !== '') {
+      try {
+        const geocodedData = await geocoder.geocode(address);
+        if (geocodedData && geocodedData.length > 0) {
+          location = {
+            type: 'Point',
+            coordinates: [geocodedData[0].longitude, geocodedData[0].latitude],
+            address: geocodedData[0].formattedAddress,
+          };
+        }
+      } catch (err) {
+        console.warn('Geocoding failed, continuing without location:', err.message);
+        // Don't block signup if geocoding fails
+      }
+    }
 
     user = new User({
       name,
@@ -55,18 +67,14 @@ router.post('/register', async (req, res) => {
     };
 
     jwt.sign(payload, 'secret', { expiresIn: 360000 }, (err, token) => {
-  if (err) {
-    console.error('JWT error:', err);
-    return res.status(500).json({ success: false, message: 'JWT error', error: err.message });
-  }
-  res.json({ success: true, token });
-});
+      if (err) throw err;
+      res.json({ token });
+    });
   } catch (err) {
-  console.error(err.message);
-  res.status(500).json({ success: false, message: 'Server error', error: err.message });
-}
+    console.error(err.message);
+    res.status(500).json({ success: false, message: 'Server error', error: err.message });
+  }
 });
-
 // @route   POST api/auth/login
 // @desc    Authenticate user & get token
 // @access  Public
