@@ -42,7 +42,7 @@ export const Profile = () => {
       try {
         // const response = await fetch("/api/profile/me", {
         
-const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/register`,{       
+const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{       
   headers: {
             "x-auth-token": localStorage.getItem("token") || "",
           },
