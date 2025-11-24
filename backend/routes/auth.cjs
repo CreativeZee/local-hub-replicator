@@ -54,19 +54,17 @@ router.post('/register', async (req, res) => {
       },
     };
 
-    jwt.sign(
-      payload,
-      'secret',
-      { expiresIn: 360000 },
-      (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-      }
-    );
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
+    jwt.sign(payload, 'secret', { expiresIn: 360000 }, (err, token) => {
+  if (err) {
+    console.error('JWT error:', err);
+    return res.status(500).json({ success: false, message: 'JWT error', error: err.message });
   }
+  res.json({ success: true, token });
+});
+  } catch (err) {
+  console.error(err.message);
+  res.status(500).json({ success: false, message: 'Server error', error: err.message });
+}
 });
 
 // @route   POST api/auth/login
