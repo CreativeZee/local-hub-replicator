@@ -21,27 +21,39 @@ const Signup = () => {
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+  e.preventDefault();
+  try {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
-      const data = await response.json();
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        navigate("/");
-      } else {
-        console.error("Signup failed");
-      }
-    } catch (error) {
-      console.error("Error signing up:", error);
+    // Check if response has content-type JSON
+    const contentType = response.headers.get("content-type");
+    let data = null;
+
+    if (contentType && contentType.includes("application/json")) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      console.error("Unexpected response:", text);
+      return;
     }
-  };
+
+    if (data?.token) {
+      localStorage.setItem("token", data.token);
+      navigate("/");
+    } else {
+      console.error("Signup failed:", data);
+    }
+  } catch (error) {
+    console.error("Error signing up:", error);
+  }
+};
+
 
   const handleAutoLocation = () => {
     if (navigator.geolocation) {
