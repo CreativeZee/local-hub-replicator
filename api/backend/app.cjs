@@ -60,8 +60,7 @@ app.use('/news', require('./routes/news.cjs'));
 app.get('/test', (req, res) => res.json({ message: 'Server is alive' }));
 
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-module.exports = app;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 
