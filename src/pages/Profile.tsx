@@ -134,7 +134,8 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
 
   const handleAddInterest = async (interest: string) => {
     try {
-      await fetch("/api/profile/interests", {
+      // await fetch("/api/profile/interests", {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/interests`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -143,7 +144,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
         body: JSON.stringify({ interest }),
       });
       // Refresh user data to show updated interests
-      const response = await fetch("/api/profile/me", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",
         },
@@ -171,7 +172,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
       formData.append("address", profileFormData.address);
       formData.append("bio", profileFormData.bio);
 
-      const response = await fetch("/api/profile", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile`, {
         method: "PUT",
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",
@@ -182,7 +183,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
       if (response.ok) {
         setEditProfileOpen(false);
         // Refresh profile data
-        const updatedUserResponse = await fetch("/api/profile/me", {
+        const updatedUserResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
           },
@@ -201,7 +202,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
   const handlePostIntroduction = async () => {
     console.log("Posting introduction:", introduction);
     try {
-      await fetch("/api/posts", {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -212,7 +213,9 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
       setIntroductionOpen(false);
       setIntroduction("");
       // Refresh posts
-      const response = await fetch(`/api/posts/user/${user._id}`);
+      // const response = await fetch(`/api/posts/user/${user._id}`);
+      const response = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/posts/user/${user._id}`);
       const data = await response.json();
       setPosts(data);
     } catch (error) {
