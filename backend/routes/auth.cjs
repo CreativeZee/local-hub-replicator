@@ -6,13 +6,16 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User.cjs');
 const NodeGeocoder = require('node-geocoder');
 
+// const options = {
+//   provider: 'openstreetmap',
+//   httpAdapter: 'https',
+//   formatter: null,
+//   headers: {
+//     'User-Agent': 'local-hub-replicator/1.0 (iamzee4@gmail.com)', // Replace with your real email
+//   },
+// };
 const options = {
   provider: 'openstreetmap',
-  httpAdapter: 'https',
-  formatter: null,
-  headers: {
-    'User-Agent': 'local-hub-replicator/1.0 (iamzee4@gmail.com)', // Replace with your real email
-  },
 };
 
 const geocoder = NodeGeocoder(options);
