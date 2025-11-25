@@ -116,6 +116,7 @@ router.put('/', [auth, upload.single('avatar')], async (req, res) => {
     if (address) {
       try {
         const geocodedData = await geocoder.geocode(address);
+        console.log('Geocoded Data:', geocodedData); // Add this line
         if (
           geocodedData &&
           geocodedData.length > 0 &&
@@ -128,6 +129,8 @@ router.put('/', [auth, upload.single('avatar')], async (req, res) => {
             geocodedData[0].latitude,
           ];
           profileFields['location.address'] = geocodedData[0].formattedAddress;
+        } else {
+          console.warn('Geocoding did not return valid coordinates.');
         }
       } catch (err) {
         console.warn('Geocoding failed, continuing without location update:', err.message);

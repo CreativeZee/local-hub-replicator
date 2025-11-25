@@ -6,16 +6,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User.cjs');
 const NodeGeocoder = require('node-geocoder');
 
-// const options = {
-//   provider: 'openstreetmap',
-//   httpAdapter: 'https',
-//   formatter: null,
-//   headers: {
-//     'User-Agent': 'local-hub-replicator/1.0 (iamzee4@gmail.com)', // Replace with your real email
-//   },
-// };
 const options = {
   provider: 'openstreetmap',
+  httpAdapter: 'https',
+  formatter: null,
+  headers: {
+    'User-Agent': 'local-hub-replicator/1.0 (iamzee4@gmail.com)', // Replace with your real email
+  },
 };
 
 const geocoder = NodeGeocoder(options);
@@ -38,15 +35,20 @@ router.post('/register', async (req, res) => {
     if (address && address.trim() !== '') {
       try {
         const geocodedData = await geocoder.geocode(address);
+        console.log('Geocoded Data:', geocodedData); // Add this line
         if (
           geocodedData &&
-          geocodedData.length > 0
+          geocodedData.length > 0 &&
+          geocodedData[0].longitude &&
+          geocodedData[0].latitude
         ) {
           location = {
             type: 'Point',
             coordinates: [geocodedData[0].longitude, geocodedData[0].latitude],
             address: geocodedData[0].formattedAddress,
           };
+        } else {
+          console.warn('Geocoding did not return valid coordinates.');
         }
       } catch (err) {
         console.warn('Geocoding failed, continuing without location:', err.message);
