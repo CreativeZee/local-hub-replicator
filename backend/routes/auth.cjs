@@ -37,9 +37,7 @@ router.post('/register', async (req, res) => {
         const geocodedData = await geocoder.geocode(address);
         if (
           geocodedData &&
-          geocodedData.length > 0 &&
-          geocodedData[0].longitude &&
-          geocodedData[0].latitude
+          geocodedData.length > 0
         ) {
           location = {
             type: 'Point',
