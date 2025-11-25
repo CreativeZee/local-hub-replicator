@@ -91,10 +91,10 @@ const NodeGeocoder = require('node-geocoder');
 
 const options = {
   provider: 'openstreetmap',
-  httpAdapter: 'https',
+  httpAdapter: 'https', // Explicitly set to https
   formatter: null,
   headers: {
-    'User-Agent': 'local-hub-replicator/1.0 (iamzee4@gmail.com)', // Replace with your real email
+    'User-Agent': 'local-hub-replicator/1.0 (mindcreative543@gmail.com)', // IMPORTANT: Replace with your real email address
   },
 };
 
