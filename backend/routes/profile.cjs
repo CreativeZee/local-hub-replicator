@@ -87,6 +87,19 @@ router.put('/interests', auth, async (req, res) => {
 
  const upload = require('../middleware/upload.cjs');
 
+const NodeGeocoder = require('node-geocoder');
+
+const options = {
+  provider: 'openstreetmap',
+  httpAdapter: 'https',
+  formatter: null,
+  headers: {
+    'User-Agent': 'local-hub-replicator/1.0 (iamzee4@gmail.com)', // Replace with your real email
+  },
+};
+
+const geocoder = NodeGeocoder(options);
+
 // @route   PUT api/profile
 // @desc    Update user profile
 // @access  Private
@@ -96,22 +109,42 @@ router.put('/', [auth, upload.single('avatar')], async (req, res) => {
   // Build profile object
   const profileFields = {};
   if (name) profileFields.name = name;
-  if (address) profileFields.location = { address };
   if (bio) profileFields.bio = bio;
   if (req.file) profileFields.avatar = req.file.path;
 
   try {
-    let user = await User.findById(req.user.id);
-
-    if (user) {
-      // Update
-      user = await User.findOneAndUpdate(
-        { _id: req.user.id },
-        { $set: profileFields },
-        { new: true }
-      );
-      return res.json(user);
+    if (address) {
+      try {
+        const geocodedData = await geocoder.geocode(address);
+        if (
+          geocodedData &&
+          geocodedData.length > 0 &&
+          geocodedData[0].longitude &&
+          geocodedData[0].latitude
+        ) {
+          profileFields['location.type'] = 'Point';
+          profileFields['location.coordinates'] = [
+            geocodedData[0].longitude,
+            geocodedData[0].latitude,
+          ];
+          profileFields['location.address'] = geocodedData[0].formattedAddress;
+        }
+      } catch (err) {
+        console.warn('Geocoding failed, continuing without location update:', err.message);
+      }
     }
+
+    const user = await User.findOneAndUpdate(
+      { _id: req.user.id },
+      { $set: profileFields },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    return res.json(user);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
