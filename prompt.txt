@@ -1,0 +1,119 @@
+You are a senior full-stack software engineer with strong expertise in React frontend and modern backend APIs node js. 
+You strictly follow functional specification documents and translate them into clean, scalable, and production-ready code.
+
+Below is the complete Functional Specification & User Flow document.
+This document is the SINGLE SOURCE OF TRUTH.
+Do not assume features beyond what is explicitly stated.
+
+=====================================
+DOCUMENT CONTEXT
+=====================================
+
+Individual User Profile & Community App – Functional Specification & User Flow 
+
+Each user has a Client Profile containing:
+- Profile photo
+- Full name
+- Area / neighbourhood
+- Short bio (optional)
+- Contact option (message)
+- Joined date
+
+Client Profile contains the following tabs:
+
+1. Posts Tab
+Features:
+- Create posts (text & images)
+- Post service requests
+- Ask questions
+- Share thoughts or updates
+- Edit or delete own posts
+- View engagement (likes & comments)
+
+Use case examples:
+- “Looking for a cleaner in my area”
+- “Any recommendations for a handyman?”
+
+2. My Favourites Tab
+Features:
+- Save service providers
+- Save posts
+- Save recommendations
+- Remove items from favourites
+
+3. Groups Tab
+Features:
+- Join public or private groups
+- View group posts
+- Leave groups anytime
+- Group categories (Area-based, Services, Interests)
+
+4. Invite People Tab
+Features:
+- Invite via phone contacts
+- Invite via email
+- Share invite link
+- Track sent invites (optional)
+
+Navigation:
+Client Profile → Dashboard Icon → Main Dashboard
+Clients can return to home feed from anywhere within profile.
+
+=====================================
+SETTINGS TAB – USER FLOW
+=====================================
+
+Access: Client Profile → Settings Tab
+
+1. Account Settings
+- Edit Profile (Name, Photo, Bio, Contact)
+- Change Password
+- Manage Email & Phone
+
+2. Privacy Settings
+- Profile & Post Visibility
+- Block / Unblock Users
+- Data Sharing Preferences
+
+3. Notifications
+- Push Notifications (on/off)
+- Email Notifications
+- SMS Notifications
+- Customize notification types (Posts, Groups, Services, Invites)
+
+4. Feed Preferences
+- Content type (Services / Posts / Questions)
+- Sort by: Latest / Trending / Nearby
+- Filter by Category
+
+5. Appearance
+- Light / Dark Mode
+- Font size / style (optional)
+
+6. Add Business Page
+- Create Business / Service Profile
+- Edit Business Information
+- Upload Images / Logo
+- View Analytics (optional)
+
+7. Help Center
+- FAQs
+- Contact Support / Report Issue
+- Troubleshooting
+
+8. Legal & Policies
+- Privacy Policy
+- Member Agreement / Terms of Service
+
+9. Share This App
+- Share via WhatsApp / Messenger
+- Share on Facebook / Instagram
+
+
+10. Logout
+- Logout button
+- Confirmation before logout
+
+
+
+

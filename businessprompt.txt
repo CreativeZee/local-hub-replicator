@@ -1,0 +1,52 @@
+
+ Service Provider / Business Profile Module
+This section defines the Business Profile for service providers. This module allows businesses to showcase services, receive recommendations, and interact with clients.
+The document includes required fields, tabs, actions, and user flow to ensure the service provider profile is fully interactive and usable by both clients and providers.
+ Business Profile Overview
+Each service provider will have a Business Profile separate from the Client Profile.
+Business Profile Details:
+Business name
+Business logo / cover image
+Primary service category (e.g., Cleaning, Painting, Handyman)
+Secondary service categories (optional)
+Service area / operating location
+Short business description (About section)
+Business website + email+ phone number
+Any service Diploma+ certificate upload 
+The document includes required fields, tabs, actions, and user flow to ensure the service provider profile is fully interactive and usable by both clients and providers.
+The following tabs are included in business profile are :
+
+Tabs in Service Provider Profile
+Post Tab
+Allows the provider to post updates or advertise services
+Each post can include text, images, and optional pricing
+Clients can view posts and comment or inquire about services
+Recommendation Tab
+Displays recommendations and feedback given by clients
+Includes star rating (optional) and date of recommendation
+
+
+Recommendations help build credibility and trust
+Verify Badge Tab
+Shows if the provider is verified by the app developer (AMK Decores)
+Verification indicates reliability and professionalism
+Only app admin can assign or remove the badge
+Activity Tab
+Lists all completed activities and jobs done by the provider
+Includes details like date, service type, location (approximate), and client feedback
+Where service provider can see all day activity 
+Services Tab
+Displays a detailed list of services offered
+Each service can include a short description, category, and optional pricing or hourly rate
+Clients can select and inquire about specific services directly from this tab
+Availability Tab
+Shows available days and time slots
+Providers can mark emergency or same-day availability
+Clients can request services based on available slots
+Photos / Work Gallery Tab
+Upload images of completed projects
+Before & after photos to showcase work quality
+Helps clients evaluate service standards
+
+
+
