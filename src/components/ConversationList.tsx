@@ -16,7 +16,7 @@ const ConversationList = ({ onSelectConversation }: { onSelectConversation: (con
 
     const fetchConversations = async () => {
       try {
-        const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/conversations`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/conversations`, {
           headers: {
             'x-auth-token': localStorage.getItem('token') || '',
           },

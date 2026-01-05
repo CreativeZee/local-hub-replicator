@@ -52,7 +52,7 @@ const Gallery: React.FC<GalleryProps> = ({ userId, initialGallery }) => {
       return;
     }
     try {
-      const response = await fetch('`${import.meta.env.VITE_BACKEND_URL}/profile/gallery', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/gallery`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

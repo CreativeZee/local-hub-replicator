@@ -27,7 +27,7 @@ const FavoritesList: React.FC = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',
         },
@@ -52,7 +52,7 @@ const FavoritesList: React.FC = () => {
       return;
     }
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/profile/favorites/${itemId}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/favorites/${itemId}`, {
         method: 'DELETE',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',
@@ -101,7 +101,7 @@ const FavoritesList: React.FC = () => {
               )}
             </CardHeader>
             <CardContent>
-              <p>{fav.item.description || fav.item.content}</p>
+              <p>{fav.item.description || fav.item.title}</p>
               {fav.item.image && (
                 <img
                   src={`${import.meta.env.VITE_BACKEND_URL}/${fav.item.image}`}

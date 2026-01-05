@@ -36,7 +36,7 @@ const IndividualProfile = () => {
   const fetchProfile = async (profileId: string) => { // Modified to accept profileId
     try {
       const response = await fetch(
-        ``${import.meta.env.VITE_BACKEND_URL}/profile/user/${profileId}`, // Fetch specific user profile
+        `${import.meta.env.VITE_BACKEND_URL}/profile/user/${profileId}`, // Fetch specific user profile
         {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",

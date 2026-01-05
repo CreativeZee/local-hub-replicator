@@ -33,7 +33,7 @@ const PostList: React.FC<PostListProps> = ({ userId, refreshPosts, groupId }) =>
 
   const fetchUserFavorites = async () => {
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',
         },
@@ -50,8 +50,8 @@ const PostList: React.FC<PostListProps> = ({ userId, refreshPosts, groupId }) =>
   const fetchPosts = async () => {
     try {
       const url = groupId
-        ? ``${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}/posts`
-        : ``${import.meta.env.VITE_BACKEND_URL}/posts/user/${userId}`;
+        ? `${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}/posts`
+        : `${import.meta.env.VITE_BACKEND_URL}/posts/user/${userId}`;
       const response = await fetch(url);
       const data = await response.json();
       setPosts(data);
@@ -72,7 +72,7 @@ const PostList: React.FC<PostListProps> = ({ userId, refreshPosts, groupId }) =>
 
   const handleFavoriteToggle = async (postId: string, isFavorited: boolean) => {
     const method = isFavorited ? 'DELETE' : 'POST';
-    const url = isFavorited ? ``${import.meta.env.VITE_BACKEND_URL}/profile/favorites/${postId}` : '`${import.meta.env.VITE_BACKEND_URL}/profile/favorites';
+    const url = isFavorited ? `${import.meta.env.VITE_BACKEND_URL}/profile/favorites/${postId}` : '`${import.meta.env.VITE_BACKEND_URL}/profile/favorites';
 
     try {
       const response = await fetch(url, {
@@ -113,7 +113,7 @@ const PostList: React.FC<PostListProps> = ({ userId, refreshPosts, groupId }) =>
       return;
     }
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/posts/${postId}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${postId}`, {
         method: 'DELETE',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

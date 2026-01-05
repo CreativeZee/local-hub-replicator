@@ -19,7 +19,7 @@ const GroupDetails = () => {
 
   const fetchGroupDetails = async () => {
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}`);
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}`);
       if (!response.ok) {
         throw new Error('Group not found');
       }
@@ -43,7 +43,7 @@ const GroupDetails = () => {
 
   const handleJoinLeaveGroup = async (action: 'join' | 'leave') => {
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}/${action}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}/${action}`, {
         method: 'POST',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',
@@ -74,7 +74,7 @@ const GroupDetails = () => {
       return;
     }
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups/${groupId}`, {
         method: 'DELETE',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

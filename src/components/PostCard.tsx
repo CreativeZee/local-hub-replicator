@@ -114,7 +114,7 @@ export const PostCard = ({
         // Only fetch if searchTerm and userLocation are available
         try {
           const response = await fetch(
-            ``${import.meta.env.VITE_BACKEND_URL}/users/search?q=${searchTerm}&lat=${userLocation.latitude}&lon=${userLocation.longitude}`
+            `${import.meta.env.VITE_BACKEND_URL}/users/search?q=${searchTerm}&lat=${userLocation.latitude}&lon=${userLocation.longitude}`
           );
           const data = await response.json();
           setSuggestions(data);
@@ -155,7 +155,7 @@ export const PostCard = ({
     if (!loggedInUserId) return; // User must be logged in to like
 
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/posts/like/${_id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/like/${_id}`, {
         method: "PUT",
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",
@@ -176,7 +176,7 @@ export const PostCard = ({
     if (!loggedInUserId) return; // User must be logged in to unlike
 
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/posts/unlike/${_id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/unlike/${_id}`, {
         method: "PUT",
         headers: {
           "x-auth-token": localStorage.getItem("token") || "",
@@ -195,7 +195,7 @@ export const PostCard = ({
 
   const handleBookmark = async () => {
     try {
-      await fetch(``${import.meta.env.VITE_BACKEND_URL}/profile/favorites`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/favorites`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +211,7 @@ export const PostCard = ({
   const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/posts/comment/${_id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/comment/${_id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

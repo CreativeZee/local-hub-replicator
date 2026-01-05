@@ -275,7 +275,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
                           <Label htmlFor="avatar">Avatar</Label>
                           <div className="flex items-center gap-4">
                             <Avatar className="h-12 w-12">
-                              <AvatarImage src={``${import.meta.env.VITE_BACKEND_URL}/${user?.avatar}`} />
+                              <AvatarImage src={`${import.meta.env.VITE_BACKEND_URL}/${user?.avatar}`} />
                               <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <Input
@@ -306,7 +306,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
               <CardContent className="pt-0 pb-6">
                 <div className="flex items-start gap-4 -mt-10">
                   <Avatar className="h-20 w-20 border-4 border-background bg-muted">
-                    <AvatarImage src={``${import.meta.env.VITE_BACKEND_URL}/${user?.avatar}`} />
+                    <AvatarImage src={`${import.meta.env.VITE_BACKEND_URL}/${user?.avatar}`} />
                     <AvatarFallback className="text-2xl font-semibold">
                       {user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>

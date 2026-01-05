@@ -9,7 +9,7 @@ const MessageList = ({ conversationId }: { conversationId: string | null }) => {
     const fetchMessages = async () => {
       if (conversationId) {
         try {
-          const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/conversations/${conversationId}/messages`, {
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/conversations/${conversationId}/messages`, {
             headers: {
               'x-auth-token': localStorage.getItem('token') || '',
             },

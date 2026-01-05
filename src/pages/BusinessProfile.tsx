@@ -37,7 +37,7 @@ const BusinessProfile = () => {
   const fetchProfile = async () => {
     try {
       const response = await fetch(
-        ``${import.meta.env.VITE_BACKEND_URL}/profile/me`,
+        `${import.meta.env.VITE_BACKEND_URL}/profile/me`,
         {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
@@ -68,7 +68,7 @@ const BusinessProfile = () => {
   const fetchReviews = async (userId: string) => {
     try {
       const response = await fetch(
-        ``${import.meta.env.VITE_BACKEND_URL}/reviews/${userId}`
+        `${import.meta.env.VITE_BACKEND_URL}/reviews/${userId}`
       );
       const data = await response.json();
       setReviews(data);
@@ -87,7 +87,7 @@ const BusinessProfile = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        ``${import.meta.env.VITE_BACKEND_URL}/reviews/${user._id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/reviews/${user._id}`,
         {
           method: "POST",
           headers: {
