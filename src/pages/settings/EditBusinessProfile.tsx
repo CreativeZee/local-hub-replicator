@@ -120,7 +120,7 @@ const EditBusinessProfile = () => {
       formData.append("availability", profileFormData.availability);
 
       const response = await fetch(
-        ``${import.meta.env.VITE_BACKEND_URL}/profile`,
+        `${import.meta.env.VITE_BACKEND_URL}/profile`,
         {
           method: "PUT",
           headers: {
