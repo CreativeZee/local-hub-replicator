@@ -34,7 +34,7 @@ const EditBusinessProfile = () => {
   const fetchProfile = async () => {
     try {
       const response = await fetch(
-        ``${import.meta.env.VITE_BACKEND_URL}/profile/me`,
+        `${import.meta.env.VITE_BACKEND_URL}/profile/me`,
         {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
