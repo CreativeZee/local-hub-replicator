@@ -16,4 +16,15 @@ export default defineConfig({
   build: {
     outDir: 'dist', // default, fine for Vercel
   },
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://localhost:4000',
+  //       changeOrigin: true,
+  //       secure: false,
+  //       // remove the /api prefix when forwarding to the backend
+  //       rewrite: (path) => path.replace(/^\/api/, ''),
+  //     },
+  //   },
+  // },
 });

@@ -40,7 +40,7 @@ export const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // const response = await fetch("/api/profile/me", {
+        // const response = await fetch("`${import.meta.env.VITE_BACKEND_URL}/profile/me", {
         
 const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{       
   headers: {
@@ -61,7 +61,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
 
     const fetchPosts = async (userId: string) => {
       try {
-        // const response = await fetch(`/api/posts/user/${userId}`);
+        // const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/posts/user/${userId}`);
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/user/${userId}`);
         const data = await response.json();
         setPosts(data);
@@ -72,7 +72,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
 
     const fetchGroups = async (userId: string) => {
       try {
-        // const response = await fetch(`/api/groups/user/${userId}`);
+        // const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/groups/user/${userId}`);
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups/user/${userId}`);
         const data = await response.json();
         debugger;
@@ -84,7 +84,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
 
     const fetchBookmarks = async () => {
       try {
-        // const response = await fetch("/api/profile/bookmarks", {
+        // const response = await fetch("`${import.meta.env.VITE_BACKEND_URL}/profile/bookmarks", {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/bookmarks`, {
         headers: {
             "x-auth-token": localStorage.getItem("token") || "",
@@ -99,7 +99,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
 
     const fetchInterestedEvents = async (userId: string) => {
       try {
-        // const response = await fetch(`/api/events/attending/${userId}`);
+        // const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/events/attending/${userId}`);
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/events/attending/${userId}`);
         const data = await response.json();
         setInterestedEvents(data);
@@ -134,7 +134,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
 
   const handleAddInterest = async (interest: string) => {
     try {
-      // await fetch("/api/profile/interests", {
+      // await fetch("`${import.meta.env.VITE_BACKEND_URL}/profile/interests", {
       await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/interests`, {
         method: "PUT",
         headers: {
@@ -213,7 +213,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
       setIntroductionOpen(false);
       setIntroduction("");
       // Refresh posts
-      // const response = await fetch(`/api/posts/user/${user._id}`);
+      // const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/posts/user/${user._id}`);
       const response = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/posts/user/${user._id}`);
       const data = await response.json();
@@ -275,7 +275,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
                           <Label htmlFor="avatar">Avatar</Label>
                           <div className="flex items-center gap-4">
                             <Avatar className="h-12 w-12">
-                              <AvatarImage src={`/api/${user?.avatar}`} />
+                              <AvatarImage src={``${import.meta.env.VITE_BACKEND_URL}/${user?.avatar}`} />
                               <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <Input
@@ -306,7 +306,7 @@ const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile/me`,{
               <CardContent className="pt-0 pb-6">
                 <div className="flex items-start gap-4 -mt-10">
                   <Avatar className="h-20 w-20 border-4 border-background bg-muted">
-                    <AvatarImage src={`/api/${user?.avatar}`} />
+                    <AvatarImage src={``${import.meta.env.VITE_BACKEND_URL}/${user?.avatar}`} />
                     <AvatarFallback className="text-2xl font-semibold">
                       {user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>

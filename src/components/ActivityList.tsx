@@ -44,7 +44,7 @@ const ActivityList: React.FC<ActivityListProps> = ({ businessId, refreshActiviti
 
   const fetchActivities = async () => {
     try {
-      const response = await fetch(`/api/activities/business/${businessId}`);
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/activities/business/${businessId}`);
       if (response.ok) {
         const data = await response.json();
         setActivities(data);
@@ -67,7 +67,7 @@ const ActivityList: React.FC<ActivityListProps> = ({ businessId, refreshActiviti
       return;
     }
     try {
-      const response = await fetch(`/api/activities/${activityId}`, {
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/activities/${activityId}`, {
         method: 'DELETE',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

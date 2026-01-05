@@ -1,9 +1,9 @@
-
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.cjs');
+const auth = require('../middleware/auth.cjs'); // Import auth middleware
 const NodeGeocoder = require('node-geocoder');
 
 const options = {
@@ -21,7 +21,12 @@ const geocoder = NodeGeocoder(options);
 // @desc    Register user
 // @access  Public
 router.post('/register', async (req, res) => {
-  const { name, email, password, address } = req.body;
+  const { name, email, password, address, userType, businessName, businessType } = req.body;
+
+  // Basic input validation to give clearer errors instead of 500
+  if (!name || !email || !password) {
+    return res.status(400).json({ success: false, message: 'Name, email and password are required' });
+  }
 
   try {
     let user = await User.findOne({ email });
@@ -35,7 +40,6 @@ router.post('/register', async (req, res) => {
     if (address && address.trim() !== '') {
       try {
         const geocodedData = await geocoder.geocode(address);
-        console.log('Geocoded Data:', geocodedData); // Add this line
         if (
           geocodedData &&
           geocodedData.length > 0 &&
@@ -48,20 +52,27 @@ router.post('/register', async (req, res) => {
             address: geocodedData[0].formattedAddress,
           };
         } else {
-          console.warn('Geocoding did not return valid coordinates.');
+          console.warn('Geocoding did not return valid coordinates for registration.');
         }
       } catch (err) {
-        console.warn('Geocoding failed, continuing without location:', err.message);
-        // Don't block signup if geocoding fails
+        console.warn('Geocoding failed for registration, continuing without location:', err.message);
       }
     }
 
-    user = new User({
+    const newUser = {
       name,
       email,
       password,
       location,
-    });
+      userType,
+    };
+
+    if (userType === 'Business') {
+      newUser.businessName = businessName;
+      newUser.businessType = businessType; // Assuming businessType is stored
+    }
+
+    user = new User(newUser);
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
@@ -74,20 +85,24 @@ router.post('/register', async (req, res) => {
       },
     };
 
-    jwt.sign(payload, 'secret', { expiresIn: 360000 }, (err, token) => {
+    const jwtSecret = process.env.JWT_SECRET || 'secret'; // Use environment variable
+    jwt.sign(payload, jwtSecret, { expiresIn: 360000 }, (err, token) => {
       if (err) throw err;
       res.json({ token });
     });
   } catch (err) {
-    console.error(err.message);
+    console.error('Register error:', err);
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ success: false, message: 'Validation error', errors: err.errors });
+    }
     res.status(500).json({ success: false, message: 'Server error', error: err.message });
   }
 });
+
 // @route   POST api/auth/login
 // @desc    Authenticate user & get token
 // @access  Public
 router.post('/login', async (req, res) => {
-  console.log("Login request received:", req.body);
   const { email, password } = req.body;
 
   try {
@@ -96,12 +111,6 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).json({ msg: 'Invalid credentials' });
     }
-console.log("User found:", user);
-console.log("Comparing password with bcrypt hash...");
-console.log("Login request received:", req.body);
-console.log("User found:", user.email);
-console.log("DB password hash:", user.password);
-console.log("Entered password:", password);
 
     const isMatch = await bcrypt.compare(password, user.password);
 
@@ -115,9 +124,10 @@ console.log("Entered password:", password);
       },
     };
 
+    const jwtSecret = process.env.JWT_SECRET || 'secret'; // Use environment variable
     jwt.sign(
       payload,
-      'secret',
+      jwtSecret,
       { expiresIn: 360000 },
       (err, token) => {
         if (err) throw err;
@@ -127,6 +137,38 @@ console.log("Entered password:", password);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
+  }
+});
+
+// @route   PUT api/auth/change-password
+// @desc    Change user's password
+// @access  Private
+router.put('/change-password', auth, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Check current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Current password is incorrect' });
+    }
+
+    // Hash new password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    await user.save();
+
+    res.json({ msg: 'Password updated successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 

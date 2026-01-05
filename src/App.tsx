@@ -19,6 +19,9 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import PrivateRoute from "./components/PrivateRoute";
 import "./leaflet-fix";
+import Settings from "./pages/Settings";
+import BusinessSettings from "./pages/settings/BusinessSettings";
+import EditBusinessProfile from "./pages/settings/EditBusinessProfile";
 
 
 const queryClient = new QueryClient();
@@ -44,6 +47,9 @@ const App = () => (
             <Route path="/marketplace/new" element={<CreateListing />} />
             <Route path="/events/new" element={<CreateEvent />} />
             <Route path="/groups/new" element={<CreateGroup />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/business-settings" element={<BusinessSettings />} />
+            <Route path="/business-settings/profile" element={<EditBusinessProfile />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

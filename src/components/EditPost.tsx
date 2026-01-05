@@ -49,7 +49,7 @@ const EditPost: React.FC<EditPostProps> = ({ post, isOpen, onClose, onPostUpdate
     }
 
     try {
-      const response = await fetch(`/api/posts/${post._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts/${post._id}`, {
         method: 'PUT',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

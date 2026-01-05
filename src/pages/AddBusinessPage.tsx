@@ -53,7 +53,7 @@ const AddBusinessPage = () => {
     }
 
     try {
-      const response = await fetch('/api/profile', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/profile`, {
         method: 'PUT',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

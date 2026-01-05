@@ -27,7 +27,7 @@ const GroupList: React.FC<GroupListProps> = ({ userId, refreshGroups }) => {
 
   const fetchGroups = async () => {
     try {
-      const response = await fetch(`/api/groups/user/${userId}`);
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/groups/user/${userId}`);
       const data = await response.json();
       setGroups(data);
     } catch (error) {

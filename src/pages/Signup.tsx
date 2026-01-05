@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate, Link } from "react-router-dom";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import RadioGroup components
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -11,48 +12,54 @@ const Signup = () => {
     email: "",
     password: "",
     address: "",
+    userType: "Individual", // Default to Individual
+    businessName: "",
+    businessType: "", // Added businessType field
   });
   const navigate = useNavigate();
 
-  const { name, email, password, address } = formData;
+  const { name, email, password, address, userType, businessName, businessType } = formData;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const onUserTypeChange = (value: string) => {
+    setFormData({ ...formData, userType: value });
+  };
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    e.preventDefault();
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, { // Use relative path /api
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    // Check if response has content-type JSON
-    const contentType = response.headers.get("content-type");
-    let data = null;
+      const contentType = response.headers.get("content-type");
+      let data = null;
 
-    if (contentType && contentType.includes("application/json")) {
-      data = await response.json();
-    } else {
-      const text = await response.text();
-      console.error("Unexpected response:", text);
-      return;
+      if (contentType && contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error("Unexpected response:", text);
+        return;
+      }
+
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+        navigate("/");
+      } else {
+        console.error("Signup failed:", data);
+      }
+    } catch (error) {
+      console.error("Error signing up:", error);
     }
-
-    if (data?.token) {
-      localStorage.setItem("token", data.token);
-      navigate("/");
-    } else {
-      console.error("Signup failed:", data);
-    }
-  } catch (error) {
-    console.error("Error signing up:", error);
-  }
-};
+  };
 
 
   const handleAutoLocation = () => {
@@ -82,71 +89,114 @@ const Signup = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-  <div className="w-full max-w-sm p-8 bg-white rounded shadow-md">
-    <h1 className="text-2xl font-bold text-center mb-6">Sign Up</h1>
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name">Name</Label>
-        <Input
-          type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={onChange}
-          required
-        />
-      </div>
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input
-          type="email"
-          name="email"
-          id="email"
-          value={email}
-          onChange={onChange}
-          required
-        />
-      </div>
-      <div>
-        <Label htmlFor="password">Password</Label>
-        <Input
-          type="password"
-          name="password"
-          id="password"
-          value={password}
-          onChange={onChange}
-          required
-        />
-      </div>
-      <div>
-        <div className="flex justify-between items-center">
-          <Label htmlFor="address">Address</Label>
-          <Button type="button" variant="link" onClick={handleAutoLocation}>
-            Auto-detect
+      <div className="w-full max-w-sm p-8 bg-white rounded shadow-md">
+        <h1 className="text-2xl font-bold text-center mb-6">Sign Up</h1>
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div>
+            <Label>Account Type</Label>
+            <RadioGroup
+              defaultValue="Individual"
+              className="flex space-x-4 mt-2"
+              onValueChange={onUserTypeChange}
+              name="userType"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Individual" id="individual" />
+                <Label htmlFor="individual">Individual</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="Business" id="business" />
+                <Label htmlFor="business">Business</Label>
+              </div>
+            </RadioGroup>
+          </div>
+          {userType === "Business" && (
+            <>
+              <div>
+                <Label htmlFor="businessName">Business Name</Label>
+                <Input
+                  type="text"
+                  name="businessName"
+                  id="businessName"
+                  value={businessName}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="businessType">Business Type</Label>
+                <Input
+                  type="text"
+                  name="businessType"
+                  id="businessType"
+                  value={businessType}
+                  onChange={onChange}
+                  required
+                />
+              </div>
+            </>
+          )}
+          <div>
+            <Label htmlFor="name">Name</Label>
+            <Input
+              type="text"
+              name="name"
+              id="name"
+              value={name}
+              onChange={onChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              type="email"
+              name="email"
+              id="email"
+              value={email}
+              onChange={onChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              name="password"
+              id="password"
+              value={password}
+              onChange={onChange}
+              required
+            />
+          </div>
+          <div>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="address">Address</Label>
+              <Button type="button" variant="link" onClick={handleAutoLocation}>
+                Auto-detect
+              </Button>
+            </div>
+            <Input
+              type="text"
+              name="address"
+              id="address"
+              value={address}
+              onChange={onChange}
+              required
+            />
+          </div>
+          <Button type="submit" className="w-full">
+            Sign Up
           </Button>
-        </div>
-        <Input
-          type="text"
-          name="address"
-          id="address"
-          value={address}
-          onChange={onChange}
-          required
-        />
+        </form>
+        <p className="mt-4 text-sm text-center text-gray-600">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Login
+          </Link>
+        </p>
       </div>
-      <Button type="submit" className="w-full">Sign Up</Button>
-    </form>
-
-    {/* Already have an account link */}
-    <p className="mt-4 text-sm text-center text-gray-600">
-      Already have an account?{" "}
-      <Link to="/login" className="text-blue-600 hover:underline">
-        Login
-      </Link>
-    </p>
-  </div>
-</div>
-
+    </div>
   );
 };
 

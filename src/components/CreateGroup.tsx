@@ -33,7 +33,7 @@ const CreateGroup: React.FC<CreateGroupProps> = ({ onGroupCreated }) => {
     }
 
     try {
-      const response = await fetch('/api/groups', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/groups`, {
         method: 'POST',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

@@ -23,13 +23,21 @@ const Login = () => {
     e.preventDefault();
     console.log("Login form data:", formData);
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, { // Use relative path /api
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
+
+      // const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
 
       const data = await response.json();
       if (data.token) {

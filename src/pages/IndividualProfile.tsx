@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom"; // Import useParams
 import { Header } from "@/components/Header";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
-import { MapPin, Settings, Calendar, Edit } from "lucide-react";
+import { MapPin, Settings, Calendar, Edit, MessageSquare } from "lucide-react"; // Import MessageSquare icon
 import { Button } from "@/components/ui/button";
 import {
   Tabs,
@@ -19,18 +19,24 @@ import CreateGroup from "@/components/CreateGroup";
 import GroupList from "@/components/GroupList";
 import FavoritesList from "@/components/FavoritesList";
 import { Input } from "@/components/ui/input";
+import { jwtDecode } from "jwt-decode"; // Import jwtDecode
 
 const IndividualProfile = () => {
   const navigate = useNavigate();
+  const { userId } = useParams(); // Get userId from URL params
   const [user, setUser] = useState<any>(null);
+  const [loggedInUserId, setLoggedInUserId] = useState<string | null>(null); // State for logged-in user ID
   const [refreshPosts, setRefreshPosts] = useState(false);
   const [refreshGroups, setRefreshGroups] = useState(false);
 
+  const [inviteLink, setInviteLink] = useState(''); // State for generated invite link
+  const [inviteEmail, setInviteEmail] = useState(''); // State for invite email input
+  const [inviteMessage, setInviteMessage] = useState(''); // State for messages to user
 
-  const fetchProfile = async () => {
+  const fetchProfile = async (profileId: string) => { // Modified to accept profileId
     try {
       const response = await fetch(
-        `/api/profile/me`,
+        ``${import.meta.env.VITE_BACKEND_URL}/profile/user/${profileId}`, // Fetch specific user profile
         {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
@@ -45,8 +51,96 @@ const IndividualProfile = () => {
   };
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decodedToken: any = jwtDecode(token);
+        setLoggedInUserId(decodedToken.user.id);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    }
+
+    const idToFetch = userId || loggedInUserId;
+    if (idToFetch) {
+        fetchProfile(idToFetch);
+    }
+  }, [userId, loggedInUserId]);
+
+  const handleMessageClick = () => {
+    if (user && user._id) {
+      navigate(`/chat/${user._id}`);
+    }
+  };
+
+  const handleGenerateInviteLink = async () => {
+    try {
+      const response = await fetch('`${import.meta.env.VITE_BACKEND_URL}/invite/generate', {
+        method: 'POST',
+        headers: {
+          'x-auth-token': localStorage.getItem('token') || '',
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setInviteLink(data.inviteLink);
+        setInviteMessage('Invite link generated successfully!');
+        navigator.clipboard.writeText(data.inviteLink); // Automatically copy to clipboard
+      } else {
+        setInviteMessage(data.msg || 'Failed to generate invite link.');
+      }
+    } catch (error) {
+      console.error('Error generating invite link:', error);
+      setInviteMessage('An error occurred while generating the invite link.');
+    }
+  };
+
+  const handleSendEmailInvite = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inviteEmail) {
+      setInviteMessage('Please enter an email address.');
+      return;
+    }
+    try {
+      // First, generate an invite link if one isn't already available
+      let currentInviteLink = inviteLink;
+      if (!currentInviteLink) {
+        const generateResponse = await fetch('`${import.meta.env.VITE_BACKEND_URL}/invite/generate', {
+          method: 'POST',
+          headers: {
+            'x-auth-token': localStorage.getItem('token') || '',
+          },
+        });
+        const generateData = await generateResponse.json();
+        if (generateResponse.ok) {
+          currentInviteLink = generateData.inviteLink;
+          setInviteLink(currentInviteLink); // Update state with the newly generated link
+        } else {
+          setInviteMessage(generateData.msg || 'Failed to generate invite link for email.');
+          return;
+        }
+      }
+
+      const response = await fetch('`${import.meta.env.VITE_BACKEND_URL}/invite/email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': localStorage.getItem('token') || '',
+        },
+        body: JSON.stringify({ email: inviteEmail, inviteLink: currentInviteLink }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setInviteMessage(data.msg || 'Invitation email sent!');
+        setInviteEmail(''); // Clear email input
+      } else {
+        setInviteMessage(data.msg || 'Failed to send invitation email.');
+      }
+    } catch (error) {
+      console.error('Error sending email invite:', error);
+      setInviteMessage('An error occurred while sending the email invite.');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -58,24 +152,40 @@ const IndividualProfile = () => {
             <Card className="mb-6">
               <div className="h-32 bg-gradient-to-r from-blue-100 to-purple-100 rounded-t-lg relative">
                 <div className="absolute top-2 right-2 flex gap-2">
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="rounded-full"
-                    aria-label="Edit profile"
-                    onClick={() => navigate("/settings/account")} // Link to Account Settings
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="rounded-full"
-                    aria-label="Settings"
-                    onClick={() => navigate("/settings")}
-                  >
-                    <Settings className="h-4 w-4" />
-                  </Button>
+                  {loggedInUserId && user && loggedInUserId === user._id ? (
+                    <>
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="rounded-full"
+                        aria-label="Edit profile"
+                        onClick={() => navigate("/settings/account")} // Link to Account Settings
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="rounded-full"
+                        aria-label="Settings"
+                        onClick={() => navigate("/settings")}
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </>
+                  ) : (
+                    loggedInUserId && user && ( // Only show message button if not viewing own profile and logged in
+                      <Button
+                        size="icon"
+                        variant="secondary"
+                        className="rounded-full"
+                        aria-label="Message user"
+                        onClick={handleMessageClick}
+                      >
+                        <MessageSquare className="h-4 w-4" />
+                      </Button>
+                    )
+                  )}
                 </div>
               </div>
               <CardContent className="pt-0 pb-6">
@@ -96,7 +206,7 @@ const IndividualProfile = () => {
                       <p className="flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         Joined{" "}
-                        {new Date(user?.createdAt).toLocaleDateString("en-US", {
+                        {new Date(user?.date).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "long",
                         })}
@@ -132,38 +242,55 @@ const IndividualProfile = () => {
               </TabsContent>
               <TabsContent value="invite">
                 <h2 className="text-2xl font-bold mb-4">Invite People</h2>
+                {inviteMessage && (
+                  <p className="text-sm text-center text-green-600 mb-4">{inviteMessage}</p>
+                )}
                 <div className="space-y-6">
+                  {/* Generate Invite Link */}
                   <div>
-                    <h3 className="text-xl font-semibold">Invite via Phone Contacts</h3>
-                    <p className="text-muted-foreground">
-                      Connect with your phone to invite contacts (Not yet implemented).
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Invite via Email</h3>
-                    <p className="text-muted-foreground">
-                      Send invitations to your friends via email (Not yet implemented).
-                    </p>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">Share Invite Link</h3>
+                    <h3 className="text-xl font-semibold mb-2">Share Invite Link</h3>
                     <p className="text-muted-foreground mb-2">
-                      Share this link with anyone you'd like to invite to the app.
+                      Generate a unique link to invite others.
                     </p>
-                    <div className="flex items-center space-x-2">
+                    <Button onClick={handleGenerateInviteLink}>Generate Link</Button>
+                    {inviteLink && (
+                      <div className="flex items-center space-x-2 mt-4">
                         <Input
-                            type="text"
-                            readOnly
-                            value={window.location.origin}
-                            className="flex-grow"
+                          type="text"
+                          readOnly
+                          value={inviteLink}
+                          className="flex-grow"
                         />
-                        <Button onClick={() => navigator.clipboard.writeText(window.location.origin)}>Copy Link</Button>
-                    </div>
+                        <Button onClick={() => navigator.clipboard.writeText(inviteLink)}>
+                          Copy Link
+                        </Button>
+                      </div>
+                    )}
                   </div>
+
+                  {/* Invite via Email */}
                   <div>
-                    <h3 className="text-xl font-semibold">Track Sent Invites</h3>
+                    <h3 className="text-xl font-semibold mb-2">Invite via Email</h3>
+                    <p className="text-muted-foreground mb-2">
+                      Send an invitation email to a friend.
+                    </p>
+                    <form onSubmit={handleSendEmailInvite} className="flex flex-col gap-3">
+                      <Input
+                        type="email"
+                        placeholder="Friend's email address"
+                        value={inviteEmail}
+                        onChange={(e) => setInviteEmail(e.target.value)}
+                        required
+                      />
+                      <Button type="submit">Send Invitation</Button>
+                    </form>
+                  </div>
+
+                  {/* Optional: Track Sent Invites - Placeholder */}
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Track Sent Invites</h3>
                     <p className="text-muted-foreground">
-                      View the status of your sent invitations (Not yet implemented).
+                      (Feature to track sent invitations not yet implemented)
                     </p>
                   </div>
                 </div>
@@ -171,9 +298,9 @@ const IndividualProfile = () => {
             </Tabs>
           </main>
         </div>
+        </div>
       </div>
-    </div>
-  );
-};
-
-export default IndividualProfile;
+    );
+  };
+  
+  export default IndividualProfile;

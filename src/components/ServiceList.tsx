@@ -26,7 +26,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ userId, refreshServices }) =>
 
   const fetchUserFavorites = async () => {
     try {
-      const response = await fetch(`/api/profile/me`, {
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',
         },
@@ -42,7 +42,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ userId, refreshServices }) =>
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`/api/services/user/${userId}`);
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/services/user/${userId}`);
       const data = await response.json();
       setServices(data);
     } catch (error) {
@@ -62,7 +62,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ userId, refreshServices }) =>
 
   const handleFavoriteToggle = async (serviceId: string, isFavorited: boolean) => {
     const method = isFavorited ? 'DELETE' : 'POST';
-    const url = isFavorited ? `/api/profile/favorites/${serviceId}` : '/api/profile/favorites';
+    const url = isFavorited ? ``${import.meta.env.VITE_BACKEND_URL}/profile/favorites/${serviceId}` : '`${import.meta.env.VITE_BACKEND_URL}/profile/favorites';
 
     try {
       const response = await fetch(url, {
@@ -103,7 +103,7 @@ const ServiceList: React.FC<ServiceListProps> = ({ userId, refreshServices }) =>
       return;
     }
     try {
-      const response = await fetch(`/api/services/${serviceId}`, {
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/services/${serviceId}`, {
         method: 'DELETE',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

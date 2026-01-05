@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { LeftSidebar } from "@/components/LeftSidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Settings, Globe, Mail, Phone, BadgeCheck, Edit } from "lucide-react";
+import { MapPin, Settings, Globe, Mail, Phone, BadgeCheck, Edit, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tabs,
@@ -37,7 +37,7 @@ const BusinessProfile = () => {
   const fetchProfile = async () => {
     try {
       const response = await fetch(
-        `/api/profile/me`,
+        ``${import.meta.env.VITE_BACKEND_URL}/profile/me`,
         {
           headers: {
             "x-auth-token": localStorage.getItem("token") || "",
@@ -46,6 +46,7 @@ const BusinessProfile = () => {
       );
       const data = await response.json();
       setUser(data);
+      fetchReviews(data._id);
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -67,7 +68,7 @@ const BusinessProfile = () => {
   const fetchReviews = async (userId: string) => {
     try {
       const response = await fetch(
-        `/api/reviews/${userId}`
+        ``${import.meta.env.VITE_BACKEND_URL}/reviews/${userId}`
       );
       const data = await response.json();
       setReviews(data);
@@ -86,7 +87,7 @@ const BusinessProfile = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `/api/reviews/${user._id}`,
+        ``${import.meta.env.VITE_BACKEND_URL}/reviews/${user._id}`,
         {
           method: "POST",
           headers: {
@@ -119,7 +120,7 @@ const BusinessProfile = () => {
               <div
                 className="h-48 bg-cover bg-center rounded-t-lg relative"
                 style={{
-                  backgroundImage: `url(${import.meta.env.VITE_BACKEND_URL}/${user?.coverImage})`,
+                  backgroundImage: `${user?.coverImage})`,
                 }}
               >
                 <div className="absolute top-2 right-2 flex gap-2">
@@ -146,7 +147,7 @@ const BusinessProfile = () => {
               <CardContent className="pt-0 pb-6">
                 <div className="flex items-start gap-4 -mt-16 ml-6">
                   <Avatar className="h-24 w-24 border-4 border-background bg-muted">
-                    <AvatarImage src={`${import.meta.env.VITE_BACKEND_URL}/${user?.avatar}`} />
+                    <AvatarImage src={`/${user?.avatar}`} />
                     <AvatarFallback className="text-3xl font-semibold">
                       {user?.businessName?.charAt(0).toUpperCase()}
                     </AvatarFallback>
@@ -203,6 +204,14 @@ const BusinessProfile = () => {
                           {user.primaryServiceCategory}{","}{user.secondaryServiceCategories}
                         </a>
                       )}
+                      <p className="flex items-center gap-1">
+                                              <Calendar className="h-4 w-4" />
+                                              Joined{" "}
+                                              {new Date(user?.date).toLocaleDateString("en-US", {
+                                                year: "numeric",
+                                                month: "long",
+                                              })}
+                                            </p>
                     </div>
                   </div>
                 </div>

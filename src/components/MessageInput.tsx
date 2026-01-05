@@ -25,7 +25,7 @@ const MessageInput = ({ conversation, onMessageSent }: { conversation: any | nul
   const handleSendMessage = async () => {
     if (text.trim() && recipientId) {
       try {
-        await fetch(`/api/messages`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/messages`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

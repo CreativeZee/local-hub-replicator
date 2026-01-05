@@ -27,7 +27,7 @@ const CreateService: React.FC<CreateServiceProps> = ({ onServiceCreated }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/services', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/services`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

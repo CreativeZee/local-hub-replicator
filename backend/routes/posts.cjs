@@ -4,11 +4,12 @@ const router = express.Router();
 const auth = require('../middleware/auth.cjs');
 const Post = require('../models/Post.cjs');
 const User = require('../models/User.cjs');
+const upload = require('../middleware/upload.cjs'); // Import upload middleware
 
 // @route   POST api/posts
 // @desc    Create a post
 // @access  Private
-router.post('/', auth, async (req, res) => {
+router.post('/', [auth, upload.single('image')], async (req, res) => {
   console.log("Received request to create post:", req.body);
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -16,9 +17,10 @@ router.post('/', auth, async (req, res) => {
     const newPost = new Post({
       title: req.body.title,
       content: req.body.content,
-      image: req.body.image,
+      image: req.file ? req.file.path : '', // Use req.file.path for uploaded image
       user: req.user.id,
       location: user.location,
+      group: req.body.groupId, // Include groupId from request body
     });
 
     const post = await newPost.save();
@@ -49,9 +51,9 @@ router.get('/', async (req, res) => {
             $maxDistance: 10000, // 10km
           },
         },
-      }).populate('user', ['name', 'avatar']).sort({ date: -1 });
+      }).populate('user', ['name', 'avatar', 'userType', 'businessName']).sort({ date: -1 });
     } else {
-      posts = await Post.find().populate('user', ['name', 'avatar']).sort({ date: -1 });
+      posts = await Post.find().populate('user', ['name', 'avatar', 'userType', 'businessName']).sort({ date: -1 });
     }
     res.json(posts);
   } catch (err) {
@@ -65,7 +67,7 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/user/:userId', async (req, res) => {
   try {
-    const posts = await Post.find({ user: req.params.userId }).populate('user', ['name', 'avatar']).sort({ date: -1 });
+    const posts = await Post.find({ user: req.params.userId }).populate('user', ['name', 'avatar', 'userType', 'businessName']).sort({ date: -1 });
     res.json(posts);
   } catch (err) {
     console.error(err.message);
@@ -192,6 +194,10 @@ router.post('/comment/:id', auth, async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     const post = await Post.findById(req.params.id);
 
+    if (!post) { // Add this check
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+
     const newComment = {
       text: req.body.text,
       name: user.name,
@@ -203,9 +209,57 @@ router.post('/comment/:id', auth, async (req, res) => {
 
     await post.save();
 
-    res.json(post.comments);
+    // Re-populate comments to send back user details if needed for frontend
+    const populatedPost = await Post.findById(req.params.id).populate('comments.user', ['_id', 'name', 'avatar']);
+    res.json(populatedPost.comments);
   } catch (err) {
     console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT api/posts/comment/:id/:comment_id
+// @desc    Edit a comment on a post
+// @access  Private
+router.put('/comment/:id/:comment_id', auth, async (req, res) => {
+  const { newText } = req.body;
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ msg: 'Post not found' });
+    }
+
+    // Find the comment by ID
+    let comment = post.comments.find(
+      (comm) => comm.id === req.params.comment_id
+    );
+
+    // Make sure comment exists
+    if (!comment) {
+      return res.status(404).json({ msg: 'Comment does not exist' });
+    }
+
+    // Check user: only comment owner or post owner can edit
+    if (
+      comment.user.toString() !== req.user.id &&
+      post.user.toString() !== req.user.id
+    ) {
+      return res.status(401).json({ msg: 'User not authorized to edit this comment' });
+    }
+
+    comment.text = newText; // Update comment text
+
+    await post.save();
+
+    // Re-populate comments to send back user details for frontend
+    const populatedPost = await Post.findById(req.params.id).populate('comments.user', ['_id', 'name', 'avatar']);
+    res.json(populatedPost.comments);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Post or comment not found' });
+    }
     res.status(500).send('Server Error');
   }
 });

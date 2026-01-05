@@ -27,7 +27,7 @@ const FavoritesList: React.FC = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await fetch(`/api/profile/me`, {
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/profile/me`, {
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',
         },
@@ -52,7 +52,7 @@ const FavoritesList: React.FC = () => {
       return;
     }
     try {
-      const response = await fetch(`/api/profile/favorites/${itemId}`, {
+      const response = await fetch(``${import.meta.env.VITE_BACKEND_URL}/profile/favorites/${itemId}`, {
         method: 'DELETE',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

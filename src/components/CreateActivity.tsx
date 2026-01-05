@@ -32,7 +32,7 @@ const CreateActivity: React.FC<CreateActivityProps> = ({ onActivityCreated }) =>
     e.preventDefault();
 
     try {
-      const response = await fetch('/api/activities', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/activities`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

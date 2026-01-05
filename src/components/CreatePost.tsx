@@ -28,7 +28,7 @@ const CreatePost: React.FC<CreatePostProps> = ({ onPostCreated, groupId }) => {
     }
 
     try {
-      const response = await fetch('/api/posts', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/posts`, {
         method: 'POST',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',

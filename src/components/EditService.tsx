@@ -46,7 +46,7 @@ const EditService: React.FC<EditServiceProps> = ({ service, isOpen, onClose, onS
     if (!service) return;
 
     try {
-      const response = await fetch(`/api/services/${service._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/services/${service._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

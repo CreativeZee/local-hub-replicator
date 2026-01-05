@@ -43,9 +43,10 @@ app.use('/news', require('./routes/news.cjs'));
 app.use('/reviews', require('./routes/reviews.cjs'));
 app.use('/services', require('./routes/services.cjs'));
 app.use('/activities', require('./routes/activities.cjs'));
-// app.use('/users', require('./routes/users.cjs'));
+app.use('/users', require('./routes/users.cjs')); // Uncommented
 app.use('/conversations', require('./routes/conversations.cjs'));
 app.use('/messages', require('./routes/messages.cjs'));
+app.use('/invite', require('./routes/invite.cjs')); // New invite router
 const PORT = process.env.PORT || 4000;
 
 // Start the server after attempting DB connection. If DB connection fails

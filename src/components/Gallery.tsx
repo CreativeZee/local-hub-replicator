@@ -27,7 +27,7 @@ const Gallery: React.FC<GalleryProps> = ({ userId, initialGallery }) => {
     }
 
     try {
-      const response = await fetch('/api/profile/gallery', {
+      const response = await fetch('`${import.meta.env.VITE_BACKEND_URL}/profile/gallery', {
         method: 'POST',
         headers: {
           'x-auth-token': localStorage.getItem('token') || '',
@@ -52,7 +52,7 @@ const Gallery: React.FC<GalleryProps> = ({ userId, initialGallery }) => {
       return;
     }
     try {
-      const response = await fetch('/api/profile/gallery', {
+      const response = await fetch('`${import.meta.env.VITE_BACKEND_URL}/profile/gallery', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const Gallery: React.FC<GalleryProps> = ({ userId, initialGallery }) => {
           {gallery.map((imagePath, index) => (
             <div key={index} className="relative">
               <img
-                src={`${import.meta.env.VITE_BACKEND_URL}/${imagePath}`}
+                src={`/${imagePath}`}
                 alt={`Gallery image ${index + 1}`}
                 className="rounded-lg object-cover h-48 w-full"
               />

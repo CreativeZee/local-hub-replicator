@@ -4,12 +4,12 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { name: "Home", href: "/", icon: Home },
-  { name: "For Sale & Free", href: "/marketplace", icon: ShoppingBag },
-  // { name: "Local News", href: "/news", icon: Newspaper },
-  { name: "Treat Map", href: "/map", icon: MapPin },
-  { name: "Groups", href: "/groups", icon: Users },
-  { name: "Events", href: "/events", icon: Calendar },
+  { name: "Dashboard", href: "/", icon: Home },
+  // { name: "For Sale & Free", href: "/marketplace", icon: ShoppingBag },
+  // // { name: "Local News", href: "/news", icon: Newspaper },
+  // { name: "Treat Map", href: "/map", icon: MapPin },
+  // { name: "Groups", href: "/groups", icon: Users },
+  // { name: "Events", href: "/events", icon: Calendar },
 ];
 
 export const LeftSidebar = () => {

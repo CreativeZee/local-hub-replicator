@@ -51,7 +51,7 @@ const EditActivity: React.FC<EditActivityProps> = ({ activity, onActivityUpdated
     e.preventDefault();
 
     try {
-      const response = await fetch(`/api/activities/${activity._id}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/activities/${activity._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
