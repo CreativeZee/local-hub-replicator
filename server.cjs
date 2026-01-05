@@ -2,11 +2,11 @@ const app = require('./backend/app.cjs');
 const path = require('path');
 const express = require('express');
 
-// Serve static files from the 'dist' directory
+// Serve static files
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Fallback route for client-side routing (MUST be last)
-app.get('/*', (req, res) => {
+// Catch-all using RegExp (REQUIRED)
+app.get(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
